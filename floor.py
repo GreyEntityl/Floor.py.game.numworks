@@ -2,10 +2,9 @@ from ion import keydown as kd
 from kandinsky import set_pixel as stp, draw_string as ds, get_pixel as gp, fill_rect as rect
 from random import *
 from time import sleep as sp, monotonic as mt
-from math import *
 
-def draw_floor(o,y=222):
-  rect(0,0,320,220,(255,255,255))
+def draw_floor(o):
+  rect(0,0,240,320,(255,255,255))
   n="123456789"
   wtr = (30,40,190)
   dr = (105,55,34)
@@ -13,7 +12,7 @@ def draw_floor(o,y=222):
   sd = (203,189,147)
   lv = (255,1,1)
   rk = (85,85,85)
-  dmd = (185,242,255)
+  dmd = (200,200,255)
   x=0
   k=0
   tmp=0
@@ -33,14 +32,12 @@ def draw_floor(o,y=222):
       i=r[0]
     else:
       i=r[1]
+    y=222#x=320
     if i in n:
       h=int(i)*4
       rect(x,y-h,4,h,dr)
       h=(int(i))*4
       rect(x,y-h-4,4,4,gs)
-      l=randint(0,2)
-      if l==0:
-        rect(x+randint(0,2),y-h-6,2,2,choice([lv,dmd]))
     elif i=="#":
       h=randint(5,6)*4
       rect(x,y-h,4,h,wtr)
@@ -55,26 +52,22 @@ def draw_floor(o,y=222):
       else:
         l=randint(0,12)
         if l==6:
-          h=randint(1,2)*4
+          h=randint(2,4)*4
           rect(x,y-h,4,h,dmd)
-          p=(randint(4,10)*4)-h
-          rect(x,y-(p+h),4,p,rk)
         else:
           h=randint(1,4)*4
           rect(x,y-h,4,h,lv)
     else:
-      h=randint(5,7)*4
+      h=6*4
       rect(x,y-h,4,h,sd)
     x+=4
-def finds(list,*find):
-  findslen=len(find)
-  values=[-1,]*findslen
+def finds(list,find):
+  rs=-1
   for i in list:
-    f=0
-    while f<findslen:
-      values[f]+=(i==find[f])
-      f+=1
-  return values
+    if i == find:
+      rs+=1
+  return rs
+  
 def d_p(x,y,c=(160,160,255)):
   rect(x,y,4,8,c)
 
@@ -83,13 +76,37 @@ def e(x,y,n,i=1):
   while i > h:
     try:
       c=n[h]
-    except IndexError as e:
+    except IndexError:
       c=n[0]
     rect(x,y+h*4,4,4,c)
     h+=1
-        
+    
+
+def ne(x,y,p,i):
+  t=0
+  m=0
+  n,m=0,0
+  while m < x+8:
+    while n < y+12:
+      if not n > 4 or n < 12 or m > 4 or m < 8:
+        stp(x+m,y+n,p[t])
+        t+=1
+      n+=1
+    m+=1
+    
 def c():
   sp(0.05)
+
+def ngp(x,y):
+  result=[]
+  n,m=0,0
+  while m < x+8:
+    while n < y+12:
+      if not n > 4 or n < 12 or m > 4 or m < 8:
+        result.append(gp(x+m,y+n))
+      n+=1
+    m+=1
+  return result
 
 def menu():
   blocks=50
@@ -105,7 +122,7 @@ def menu():
     "Red":(255,1,1),
     "Blue":(1,1,255),
     "Green":(1,255,1),
-    "White":(250,250,250),
+    "White":(255,255,255),
     "Purple":(160,160,255),
     "Brown":(105,55,34),
     "Gray":(130,130,130),
@@ -118,13 +135,15 @@ def menu():
   c3=(90,90,160)
   rect(0,0,320,220,c1)
   xf,yf=40,25
-  xnd,ynd=40,150
+  xnd,ynd=40,170
   mds=("Health bar","Hearts")
   dc=("No","Yes")
   ds("{Floor.py} by Sentyl_",xf,yf,(130,130,255))
-  ds("Start >",90,70,c3)
-  ds("Config >",90,110,c3)
+  ds("Start >",90,90,c3)
+  ds("Config >",90,130,c3)
   ds("[!]New background >  "+dc[newd],xnd,ynd,c3)
+  if newd:
+    draw_floor(80)
   while True:
     if kd(1):
       e-=1
@@ -138,20 +157,17 @@ def menu():
       e=-1
     if e==-1:
       ds("{Floor.py} by Sentyl_",xf,yf,(130,130,255))
-      ds("Start >",90,70,c2)
-      ds("Config >",90,110,c3)
+      ds("Start >",90,90,c2)
+      ds("Config >",90,130,c3)
       ds("[!]New background >  "+dc[newd],xnd,ynd,c3)
       if kd(4) or kd(3):
         sp(0.1)
-        ybm=220
-        if newd:
-          ybm=180
-        rect(0,0,320,ybm,(255,255,255))
+        rect(0,0,320,220,(255,255,255))
         break
     elif e==0:
       ds("{Floor.py} by Sentyl_",xf,yf,(130,130,255))
-      ds("Start >",90,70,c3)
-      ds("Config >",90,110,c2)
+      ds("Start >",90,90,c3)
+      ds("Config >",90,130,c2)
       ds("[!]New background >  "+dc[newd],xnd,ynd,c3)
       if kd(4) or kd(3):
         d=True
@@ -159,29 +175,30 @@ def menu():
         rect(0,0,320,220,c1)
         if newd:
           draw_floor(80)
-        ds("{Floor.py} by Sentyl_",xf,yf,(130,130,255))        
+        ds("{Floor.py} by Sentyl_",xf,yf,(130,130,255))
+        
         ds("< Config",90,50,c2)
         ds("Lives >",90,90,c3)
         ds("Blocks >",90,130,c3)
         sp(0.2)
     elif e==1:
       ds("{Floor.py} by Sentyl_",xf,yf,(130,130,255))
-      ds("Start >",90,70,c3)
-      ds("Config >",90,110,c3)  
+      ds("Start >",90,90,c3)
+      ds("Config >",90,130,c3)  
       ds("[!]New background >  "+dc[newd],xnd,ynd,c2)
         
       if kd(0):
         newd+=1
         if newd>1:
           newd=0
-          rect(90,150,300,20,c1)
+          rect(90,170,300,20,c1)
         ds("[!]New background >  "+dc[newd],xnd,ynd,c2)
         sp(0.2)
       elif kd(3):
         newd-=1
         if newd<0:
           newd=1
-        rect(90,150,300,20,c1)
+        rect(90,170,300,20,c1)
         ds("[!]New background >  "+dc[newd],xnd,ynd,c2)
         sp(0.2)
       if kd(4):
@@ -189,11 +206,10 @@ def menu():
         if newd:
           draw_floor(80)
         ds("{Floor.py} by Sentyl_",xf,yf,(130,130,255))
-        ds("Start >",90,70,c3)
-        ds("Config >",90,110,c3)
+        ds("Start >",90,90,c3)
+        ds("Config >",90,130,c3)
         ds("[!]New background >  "+dc[newd],xnd,ynd,c2)
-        while kd(4):
-          pass
+        one_click(4)
     if d:
       while d:
         if kd(1):
@@ -218,8 +234,8 @@ def menu():
             if newd:
               draw_floor(80)
             ds("{Floor.py} by Sentyl_",xf,yf,(130,130,255))
-            ds("Start >",90,70,c3)
-            ds("Config >",90,110,c2)
+            ds("Start >",90,90,c3)
+            ds("Config >",90,130,c2)
             ds("[!]New background >  "+dc[newd],xnd,ynd,c3)
             sp(0.2) 
         elif e==3:
@@ -409,19 +425,17 @@ def menu():
               rect(90,130,300,20,c1)
               ds("Display >  "+dc[display],90,130,c2)
               sp(0.2)
-  global lastlives
-  l=l*((1-m)*10)+(m*l)
-  lastlives=l
-  return l,m,blocks,display,cls[cs[csn]],newd
+  return l,m,blocks,display,cls[cs[csn]]
 def d_l(lives,d_l_mode,color):
   x=4
-  y=12
+  y=4
   if d_l_mode:
     rect(x-2,y-2,lastlives*8+1,7,(0,0,0))
   else:
     rect(x-2,y-2,lastlives+3,7,(0,0,0))
   i=0
   while i < lives:
+    #if not lives==:
     if d_l_mode:
       rect(x,y,4,4,color)
       x+=8
@@ -429,17 +443,8 @@ def d_l(lives,d_l_mode,color):
       rect(x,y,1,4,color)
       x+=1
     i+=1
-
-def d_b(blks,color):
-  x=4
-  y=4
-  rect(x-2,y-2,310,7,(0,0,0))
-  if not blks==0:
-    pb=int(blks/3.1)
-    rect(x,y,pb,4,color)
-
 class new_player:
-  def __init__(self,x,y,lives,d_l_mode,blocks,isdisplay,color,newd):
+  def __init__(self,x,y,lives,d_l_mode,blocks,isdisplay,color):
     self.x=x
     self.y=y
     self.lives=lives
@@ -449,17 +454,6 @@ class new_player:
     self.color=color
     self.isend=True
     self.is_in_start=True
-    self.mi=[[(255,255,255)],[(255,255,255)]]
-    self.newd=newd
-    self.fall=0
-    self.fps_targ=60
-    self.lt=mt()
-  def g_mi(self,s):
-    return self.mi[s]
-  def mi_pop(self,s):
-    self.mi.pop(s)
-  def mi_append(self,s):
-    self.mi.append(s)
   def check(self):
     return self.isend
   def turn_over(self):
@@ -491,13 +485,18 @@ class new_player:
     return self.is_in_start
   def turn_in_run(self):
     self.is_in_start=False
-paramtrs=menu()
-p=new_player(randint(0,316),randint(20,200),*paramtrs)
-def move(lives,d_l_mode,blocks,isdisplay,color,newd):
+lives,d_l_mode,blocks,isdisplay,color=menu()
+p=new_player(randint(1,12)*randint(1,12),randint(1,12)*randint(1,12),lives,d_l_mode,blocks,isdisplay,color)
+def move(lives,d_l_mode,blocks,isdisplay,color,xp=p.g_x(),yp=p.g_x(),func1=gp,func2=e):
+  print("Starting")
   color=p.g_color()
+  #p=new_player(randint(1,12)*randint(1,12),randint(1,12)*randint(1,12),lives,d_l_mode,blocks,isdisplay,color)
+  xp=p.g_x()
+  yp=p.g_x()
   func1=gp
   func2=e
-  mi_app,mi,mi_pop=p.mi_append,p.g_mi,p.mi_pop
+  p.s_x(xp)
+  p.s_y(yp)
   x,s_x=p.g_x,p.s_x
   y,s_y=p.g_y,p.s_y
   blocks,s_blocks=p.g_blocks,p.s_blocks
@@ -505,37 +504,37 @@ def move(lives,d_l_mode,blocks,isdisplay,color,newd):
   d_l_mode=p.g_d_l_mode()
   color=p.g_color()
   display=p.g_isdisplay()
-  fps,globalfps=0,0.000000000000001
-  if display:
-    d_b(blocks(),color)
+  global lastlives
+  if not d_l_mode:
+    s_lives(lives()*10)
+  lastlives=lives()
+  lt=mt()
+  fall=0
+  pt=0
   if p.check_is_in_start():
-    print("Starting...")
     p.turn_in_run()
     rect(x(),y()+8,4,4,(0,255,0))
-  else:
-    print("Restarting...")
-  d_l(lives(),d_l_mode,color)
+  mi=[[func1(x(),y())]]
+  d_l(lastlives,d_l_mode,color)
+  pp=mt()
   b=-1
   isonwtr=0
   isnotonwtr=0
   isnotonf=False
-  print("Success")
   while lives() > 0:
     b+=1
     if kd(51):
-      stpt=mt()
+      plt=mt()
       pte=0
       while pte<=7:
         rect(x(),y()+pte,4,1,(pte*11,pte*22,pte*30))
         pte+=1
       sp(0.2)
-      while kd(51):
-        pass
-      while not kd(51):
-        pass
-      while kd(51):
-        pass
-      p.lt+=mt()-stpt
+      while True:
+        if kd(51):
+          sp(0.2)
+          pt+=mt()-plt
+          break
     if kd(45) or kd(4):
       if not blocks() <= 0:
         isnotonf=True
@@ -553,8 +552,6 @@ def move(lives,d_l_mode,blocks,isdisplay,color,newd):
         if isnotonf:
           s_blocks(blocks()-1)
           rect(x(),y()+8,4,4,(145,145,170))
-          if display:
-            d_b(blocks(),color)
 
     isonb=True
     resf=[]
@@ -563,89 +560,96 @@ def move(lives,d_l_mode,blocks,isdisplay,color,newd):
       floor=gp(x()+iter,y()+8)
       resf.append(floor)
       iter+=1
-    fd=finds(resf,(255,255,255),(24,40,189))
-    d,wfs=fd[0],fd[1]
+    d=finds(resf,(255,255,255))
+    wfs=finds(resf,((24,40,189)))
+    
     if kd(46) or kd(17):
       if d<3:
-        bo=blocks()
-        if bo<950:
-          s_blocks(bo+1)
-          rect(x(),y()+8,4,4,(255,255,255))
-          sp(0.05)
-          if display:
-            d_b(blocks(),color)
-      
+        s_blocks(blocks()+1)
+        rect(x(),y()+8,4,4,(255,255,255))
+        sp(0.05)    
+    if display:
+      rect(200,20,24,15,(255,255,255))
+      ds(str(blocks()),200,20,(160,160,255))
+    no=mt()-pp
+    pp=mt()
     if not d>=3:
       if wfs>-1:
-        p.fall=0
+        isonwtr+=1
+        fall=0
         c()
       else:
-        p.fall/=4
-        if p.fall>=4:
-          p.fall/=4
+        isnotonwtr+=1
+        fall/=4
+        if fall>=4:
+          fall/=4
           if d_l_mode:
-            s_lives(lives()-int(p.fall))
+            s_lives(lives()-int(fall))
           else:
-             s_lives(lives()-int(p.fall*10))
-          d_l(lives(),d_l_mode,color)
+             s_lives(lives()-int(fall*10))
+          d_l(lives(),d_l_mode,color) 
       isonb=False
-    currentfps=1/(mt()-fps)
-    globalfps=(currentfps+globalfps)/2
-    ds(str(currentfps)[:5],90,90)
-    fps=mt()
     if isonb:
-      mi_app([func1(x(),y()+8)])
-      func2(x(),y(),mi(0),1)
-      mi_pop(0)
+      mi.append([func1(x(),y()+8)])
+      func2(x(),y(),mi[0],1)
+      mi.pop(0)
       s_y(y()+1)
       d_p(x(),y())
-      p.fall+=1
+      fall+=1
       continue
-    mp=1+(3*(kd(12) or kd(52)))
+    mp=0
     if kd(0):      
-      mi_app([func1(x()-mp,y()),func1(x()-mp,y()+4)])
-      func2(x(),y(),mi(0),2)
-      mi_pop(0)
-      s_x(x()-mp)
+      if kd(12) or kd(52):
+        mp=-4
+      else:
+        mp=-1
+      mi.append([func1(x()+mp,y())])
+      func2(x(),y(),mi[0],2)
+      mi.pop(0)
+      s_x(x()+mp)
     elif kd(3):
-      mi_app([func1(x()+4+mp,y()),func1(x()+4+mp,y()+4)])
-      func2(x(),y(),mi(0),2)
-      mi_pop(0)
+      if kd(12) or kd(52):
+        
+        mp=4
+      else:
+        mp=1
+      mi.append([func1(x()+4+mp,y())])
+      func2(x(),y(),mi[0],2)
+      mi.pop(0)
       s_x(x()+mp)
     elif kd(1):
-      mi_app([func1(x(),y()-4)])
-      func2(x(),y()+4,mi(0))
-      mi_pop(0)
+      mi.append([func1(x(),y()-4),func1(x(),y()-4)])
+      func2(x(),y()+4,mi[0],1)
+      mi.pop(0)
       s_y(y()-4)
     elif kd(2):      
-      mi_app([func1(x(),y()+8+(mp))])
-      func2(x(),y(),mi(0))
-      mi_pop(0)
+      if kd(12) or kd(52):
+        mp=4
+      else:
+        mp=1
+      mi.append([func1(x(),y()+8+(mp-1)),func1(x(),y()+8+(mp-1))])
+      func2(x(),y(),mi[0],1)
+      mi.pop(0)
       s_y(y()+mp)
     fall=0
     d_p(x(),y())
     
     c()
-  end=mt()
-  rect(x(),y(),4,8,(255,255,255))
-  rect(x(),y()+4,8,4,(255,0,0))
   p.turn_over()
   s_lives(0)
   d_l(0,d_l_mode,color)
-  ds("Game Over",100,80,(255,255,255),(255,0,0))
-  gtime=end-p.lt
-  tig=str(gtime)
-  ds("Time in game : "+tig[:tig.find(".")+4]+"s",55,120,(255,255,255),(160,160,245))
-  print("\n[-------{Game stats}--------]")
-  print("[ For more time precision:  ]\n[ +",gtime,"      ]")
-  print("[ Average fps reached:      ]\n[ +",globalfps,"      ]")
-  print("[ Average time per lives :  ]\n[ +",gtime/lastlives,"     ]")
-def init(n=True,lives=p.g_lives(),d_l_mode=p.g_d_l_mode(),blocks=p.g_blocks(),display=p.g_isdisplay(),color=p.g_color(),newd=p.newd):
-  if n and not newd:draw_floor(80)
+  ds("Game Over",100,80,(255,0,0))
+  tig=str((mt()-lt)-pt)
+  pfp=tig.find(".")
+  ds("Time in game : "+tig[:pfp]+tig[pfp:pfp+4]+"s",55,120,(160,160,245))
+  #ds(str(tig),80,180)
+def init(lives=p.g_lives(),d_l_mode=p.g_d_l_mode(),blocks=p.g_blocks(),display=p.g_isdisplay(),color=p.g_color(),x=p.g_x(),y=p.g_y(),n=True):
+  sp(0.01)
+  if n:draw_floor(80)
   while p.check():
     try:
-      move(*paramtrs)
-    except KeyboardInterrupt or NameError:
-      init(False)
+      move(lives,d_l_mode,blocks,isdisplay,color)
+    except KeyboardInterrupt or NameError as e:
+      init(p.g_lives(),p.g_d_l_mode(),p.g_blocks(),p.g_isdisplay(),p.g_color(),p.g_x(),p.g_y(),False)
 
-init(True,p.g_lives(),p.g_d_l_mode(),p.g_blocks(),p.g_isdisplay(),p.g_color())
+init(p.g_lives(),p.g_d_l_mode(),p.g_blocks(),p.g_isdisplay(),p.g_color())
