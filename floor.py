@@ -591,7 +591,7 @@ def move(lives,d_l_mode,blocks,isdisplay,color,newd):
       isonb=False
     currentfps=1/(mt()-fps)
     globalfps=(currentfps+globalfps)/2
-    ds(str(currentfps)[:5],90,90)
+    #ds(str(currentfps)[:5],90,90)
     fps=mt()
     if isonb:
       mi_app([func1(x(),y()+8)])
